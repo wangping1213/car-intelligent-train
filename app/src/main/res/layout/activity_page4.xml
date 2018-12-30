@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:background="#090A09"
+    tools:context="com.wp.car_intelligent_train.activity.MainActivity"
+    >
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/dimen_20_dip"
+        android:layout_height="@dimen/dimen_20_dip"
+        android:onClick="back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/dimen_10_dip"
+        android:layout_marginTop="@dimen/dimen_15_dip" />
+
+    <TextView
+        android:id="@+id/app_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#989DAC"
+        android:paddingRight="@dimen/dimen_25_dip"
+        android:paddingLeft="@dimen/dimen_30_dip"
+        android:textSize="@dimen/dimen_15_sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_8_dip" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view_system"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_70_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/dimen_50_dip"
+        app:layout_constraintTop_toBottomOf="@+id/app_title_name">
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:layout_width="@dimen/dimen_340_dip"
+        android:layout_height="@dimen/dimen_50_dip"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        android:background="@drawable/p2_btn_refresh_bg_style"
+        android:onClick="reset"
+        android:text="清 除 所 有 故 障"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_18_sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/button" />
+</android.support.constraint.ConstraintLayout>

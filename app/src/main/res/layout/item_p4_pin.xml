@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/dimen_340_dip"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/dimen_200_dip"
+    android:maxHeight="@dimen/dimen_300_dip">
+
+    <ImageView
+        android:id="@+id/iv_p4_pin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/tv_pin_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_16_sp"
+        android:gravity="left"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        android:paddingRight="@dimen/dimen_10_dip"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip" />
+
+    <TextView
+        android:id="@+id/tv_pID_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_btn_cancel"
+        android:textSize="@dimen/dimen_15_sp"
+        android:text="器件针脚号"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pin_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip" />
+
+    <ImageView
+        android:id="@+id/iv_pID_2"
+        android:layout_width="@dimen/dimen_1_dip"
+        android:layout_height="@dimen/dimen_15_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pin_name"
+        android:layout_marginTop="@dimen/dimen_10_dip"
+        app:layout_constraintStart_toEndOf="@id/tv_pID_1"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/tv_pID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_15_sp"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pin_name"
+        app:layout_constraintStart_toEndOf="@id/iv_pID_2"
+        android:layout_marginStart="@dimen/dimen_5_dip"/>
+
+
+    <TextView
+        android:id="@+id/tv_cID_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_btn_cancel"
+        android:textSize="@dimen/dimen_15_sp"
+        android:text="对应电脑针脚号"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pID"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip" />
+
+    <ImageView
+        android:id="@+id/iv_cID_2"
+        android:layout_width="@dimen/dimen_1_dip"
+        android:layout_height="@dimen/dimen_15_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pID"
+        android:layout_marginTop="@dimen/dimen_10_dip"
+        app:layout_constraintStart_toEndOf="@id/tv_cID_1"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/tv_cID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_15_sp"
+        android:gravity="center"
+        android:text="K20/X2/4"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pID"
+        app:layout_constraintStart_toEndOf="@id/iv_cID_2"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        />
+
+    <CheckBox
+        android:id="@+id/ck_conn"
+        android:layout_width="@dimen/dimen_20_dip"
+        android:layout_height="@dimen/dimen_20_dip"
+        android:checked="false"
+        android:button="@null"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_30_dip" />
+
+    <TextView
+        android:id="@+id/tv_conn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="连接"
+        android:textColor="@color/color_circle_2"
+        android:textSize="@dimen/dimen_15_sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ck_conn" />
+
+    <CheckBox
+        android:id="@+id/ck_cut_off"
+        android:layout_width="@dimen/dimen_20_dip"
+        android:layout_height="@dimen/dimen_20_dip"
+        android:checked="false"
+        android:button="@null"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        app:layout_constraintStart_toEndOf="@+id/tv_conn"
+        android:layout_marginStart="@dimen/dimen_50_dip" />
+
+    <TextView
+        android:id="@+id/tv_cut_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="断开"
+        android:textColor="@color/color_circle_2"
+        android:textSize="@dimen/dimen_15_sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ck_cut_off" />
+
+    <CheckBox
+        android:id="@+id/ck_bonding"
+        android:layout_width="@dimen/dimen_20_dip"
+        android:layout_height="@dimen/dimen_20_dip"
+        android:checked="false"
+        android:button="@null"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        app:layout_constraintStart_toEndOf="@+id/tv_cut_off"
+        android:layout_marginStart="@dimen/dimen_50_dip" />
+
+    <TextView
+        android:id="@+id/tv_bonding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="搭铁"
+        android:textColor="@color/color_circle_2"
+        android:textSize="@dimen/dimen_15_sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cID"
+        android:layout_marginTop="@dimen/dimen_30_dip"
+        android:layout_marginBottom="@dimen/dimen_20_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/dimen_5_dip"
+        app:layout_constraintStart_toEndOf="@+id/ck_bonding" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dimen_340_dip"
+    android:layout_height="@dimen/dimen_180_dip">
+
+    <ImageView
+        android:id="@+id/iv_p2_system"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        android:background="@drawable/p2_car_body_normal"
+        />
+
+    <TextView
+        android:id="@+id/tv_wifi_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/dimen_10_sp"
+        android:text="JG-VDB-II-Verano_ECU-0021"
+        android:textColor="@color/color_wifi_name"
+        android:layout_marginBottom="@dimen/dimen_55_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_18_dip" />
+
+</android.support.constraint.ConstraintLayout>

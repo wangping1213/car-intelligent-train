@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/dimen_340_dip"
+    android:layout_height="@dimen/dimen_60_dip"
+    android:minHeight="@dimen/dimen_30_dip">
+
+    <ImageView
+        android:id="@+id/iv_p3_system"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/app_title_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_15_sp"
+        android:text="B74 - 歧管绝对压力传感器"
+        android:layout_marginTop="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_10_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_8_dip" />
+
+</android.support.constraint.ConstraintLayout>

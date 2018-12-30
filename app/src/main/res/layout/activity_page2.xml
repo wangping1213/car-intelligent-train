@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    tools:context="com.wp.car_intelligent_train.activity.Page2Activity"
+    android:background="#090A09"
+    >
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_bg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:contentDescription="@string/app_name"-->
+        <!--android:scaleType="fitXY"-->
+        <!--/>-->
+
+    <ImageView
+        android:layout_width="@dimen/dimen_20_dip"
+        android:layout_height="@dimen/dimen_20_dip"
+        android:background="@drawable/p2_icon_back"
+        android:onClick="back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/dimen_10_dip"
+        android:layout_marginTop="@dimen/dimen_15_dip" />
+
+    <TextView
+        android:id="@+id/app_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/dimen_20_sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_8_dip" />
+
+    <ImageView
+        android:id="@+id/iv_no_system"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_70_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:layout_marginTop="@dimen/dimen_35_dip"
+        >
+
+    </ImageView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view_system"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/dimen_35_dip"
+        app:layout_constraintTop_toBottomOf="@+id/app_title_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_70_dip">
+    </android.support.v7.widget.RecyclerView>
+
+
+    <Button
+        android:layout_width="@dimen/dimen_335_dip"
+        android:layout_height="@dimen/dimen_50_dip"
+        android:textColor="@android:color/white"
+        android:background="@drawable/p2_btn_refresh_bg_style"
+        android:textSize="@dimen/dimen_18_sp"
+        android:text="刷  新"
+        android:onClick="refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dimen_3_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_20_dip"/>
+
+</android.support.constraint.ConstraintLayout>

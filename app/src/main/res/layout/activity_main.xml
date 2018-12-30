@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    tools:context="com.wp.car_intelligent_train.activity.MainActivity"
+    >
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        />
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_250_dip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_1_dip"
+        >
+
+        <ImageView
+            android:id="@+id/iv_p1_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/app_name"
+            />
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_80_dip"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dimen_10_dip"
+            android:layout_marginStart="@dimen/dimen_20_dip"
+            android:layout_marginEnd="@dimen/dimen_20_dip"
+            android:contentDescription="@string/app_name">
+
+            <ImageView
+                android:id="@+id/iv_p1_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/app_name"
+                />
+
+            <TextView
+                android:id="@+id/app_title_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name_2"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="@dimen/dimen_25_sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/dimen_25_dip"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <com.wp.car_intelligent_train.view.MarqueeView
+            android:id="@+id/home_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_100_dip"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/dimen_100_dip"
+            app:layout_constraintTop_toBottomOf="parent">
+        </com.wp.car_intelligent_train.view.MarqueeView>
+
+
+
+        <TextView
+            android:id="@+id/tv_lb_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lb_car"
+            android:textSize="@dimen/dimen_10_sp"
+            android:textColor="#A8EF9B"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/dimen_8_dip"
+            app:layout_constraintTop_toBottomOf="@id/home_recycle_view" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <Button
+        android:layout_width="@dimen/dimen_340_dip"
+        android:layout_height="@dimen/dimen_50_dip"
+        android:textColor="@android:color/white"
+        android:background="@drawable/p1_btn_enter_bg_style"
+        android:textSize="@dimen/dimen_18_sp"
+        android:text="进  入"
+        android:onClick="jumpInto"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dimen_8_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dimen_20_dip"/>
+
+
+
+</android.support.constraint.ConstraintLayout>

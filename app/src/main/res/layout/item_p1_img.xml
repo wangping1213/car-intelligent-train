@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dimen_120_dip"
+    android:layout_height="@dimen/dimen_100_dip">
+
+    <TextView
+        android:id="@+id/tv_car_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="科鲁兹"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/dimen_12_sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_5_dip"/>
+
+    <ImageView
+        android:id="@+id/iv_icon_arrow"
+        android:layout_width="@dimen/dimen_9_dip"
+        android:layout_height="@dimen/dimen_12_dip"
+        android:src="@drawable/p1_icon_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_car_name"
+        android:layout_marginTop="@dimen/dimen_5_dip"
+        />
+
+    <ImageView
+        android:id="@+id/iv_p1_car"
+        android:layout_width="@dimen/dimen_112_dip"
+        android:layout_height="@dimen/dimen_70_dip"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_icon_arrow"/>
+
+
+</android.support.constraint.ConstraintLayout>

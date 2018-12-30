@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dimen_300_dip"
+    android:layout_height="@dimen/dimen_160_dip"
+    android:background="@drawable/shape_rect"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/tv_tip1"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_30_dip"
+        android:text="连接失败"
+        android:textColor="#2E323B"
+        android:textSize="@dimen/dimen_20_sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dimen_8_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_15_dip" />
+
+    <TextView
+        android:id="@+id/tv_tip2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请检查设备与网络是否正常"
+        android:textColor="#989DAC"
+        android:textSize="@dimen/dimen_15_sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dimen_15_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tip1"
+        android:layout_marginTop="@dimen/dimen_8_dip" />
+
+    <Button
+        android:layout_width="@dimen/dimen_200_dip"
+        android:layout_height="@dimen/dimen_40_dip"
+        android:textColor="@android:color/white"
+        android:background="@drawable/shape_btn_ok"
+        android:textSize="@dimen/dimen_18_sp"
+        android:text="关 闭"
+        android:onClick="closeTip"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dimen_8_dip"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/dimen_8_dip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tip2"
+        android:layout_marginTop="@dimen/dimen_15_dip" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="blue">#2F98E9</color>
+    <color name="color_circle_1">#2E323B</color>
+    <color name="color_circle_2">#1AAB2D</color>
+    <color name="color_circle_3">#6650D1</color>
+    <color name="color_btn_1">#1AAB2D</color>
+    <color name="color_btn_2">#7DCC56</color>
+    <color name="color_btn_cancel">#96AB96</color>
+    <color name="color_tip">#BF000000</color>
+    <color name="color_loading">#8C000000</color>
+    <color name="color_enter_1">#7DCC56</color>
+    <color name="color_enter_2">#1AAB2D</color>
+    <color name="color_wifi_name">#7C977C</color>
+</resources>
