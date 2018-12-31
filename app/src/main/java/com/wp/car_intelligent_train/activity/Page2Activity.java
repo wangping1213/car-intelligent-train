@@ -1,6 +1,5 @@
 package com.wp.car_intelligent_train.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,33 +23,30 @@ import com.bumptech.glide.Glide;
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.R;
 import com.wp.car_intelligent_train.activity.tip.TipConnFailedActivity;
-import com.wp.car_intelligent_train.activity.tip.TipExitActivity;
 import com.wp.car_intelligent_train.adapter.P2CarSystemAdapter;
 import com.wp.car_intelligent_train.application.MyApplication;
 import com.wp.car_intelligent_train.base.BaseActivity;
 import com.wp.car_intelligent_train.decoration.MySpaceItemDecoration;
 import com.wp.car_intelligent_train.dialog.LoadingDialogUtils;
 import com.wp.car_intelligent_train.entity.CarSystem;
+import com.wp.car_intelligent_train.entity.UdpResult;
 import com.wp.car_intelligent_train.enums.P2DrawableEnum;
 import com.wp.car_intelligent_train.enums.P5DrawableEnum;
 import com.wp.car_intelligent_train.holder.CommonViewHolder;
 import com.wp.car_intelligent_train.receiver.NetworkChangeReceiver;
-import com.wp.car_intelligent_train.udp.IUdpClient;
-import com.wp.car_intelligent_train.udp.UdpClientFactory;
+import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 import com.wp.car_intelligent_train.udp.UdpSystem;
+import com.wp.car_intelligent_train.udp.receiver.UdpReceiverCenter;
 import com.wp.car_intelligent_train.util.TimeUtil;
 import com.wp.car_intelligent_train.util.WifiUtil;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,6 +91,7 @@ public class Page2Activity extends BaseActivity
         dialog = LoadingDialogUtils.createLoadingDialog(Page2Activity.this, "加载中...");
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         application = (MyApplication) this.getApplication();
+        UdpReceiverCenter.newInstance(application);
         UdpSystem.setApplication(application);
         registerBroadcast();
         firstSsidList = this.getIntent().getStringArrayListExtra("ssidList");
@@ -125,12 +121,6 @@ public class Page2Activity extends BaseActivity
                     LoadingDialogUtils.closeDialog(dialog);
                     dialog = null;
                 }
-//                if (data.size() == 0) {
-//                    List<ScanResult> scanResults = mWifiManager.getScanResults();
-//                    Log.d(TAG, String.format("page2 resultList:%s", null == scanResults ? scanResults : scanResults.size()));
-//                    Intent intent = new Intent(Page2Activity.this, TipExitActivity.class);
-//                    startActivity(intent);
-//                }
             }
         }, 2000L);
     }
@@ -244,7 +234,9 @@ public class Page2Activity extends BaseActivity
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                List<String> vbsList = (List<String>) application.getMap().get("vbsList");
+                UdpResult udpResult = (UdpResult) application.getMap().get("udpResult");
+                if (null == udpResult) udpResult = new UdpResult("search");
+                List<String> vbsList = udpResult.getDataByClass(List.class);
                 if (msg.what == 0 && (null == vbsList || vbsList.size() == 0)) {
                     jumpFailed();
                     return;
@@ -271,8 +263,7 @@ public class Page2Activity extends BaseActivity
                 JSONObject jsonObject = null;
                 Intent intent = null;
                 try {
-                    application.getMap().remove("searchFlag");
-                    application.getMap().remove("vbsList");
+                    Thread.sleep(Constant.UDP_WAIT_TIME);
                     jsonObject = UdpSystem.search(type, handler);
                     Class<?> tClass = null;
                     if (UdpClientFactory.TBOX_KEY.equals(type)) {
@@ -336,57 +327,30 @@ public class Page2Activity extends BaseActivity
 
 
     private void connWifiBySsid(final WifiUtil wifiUtil, final String ssid) {
-//        final Handler handler = new Handler() {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                if (msg.what == 0) {
-//                    jumpFailed();
-//                    return;
-//                }
-//            }
-//        };
+        List<WifiConfiguration> configurationList = mWifiManager.getConfiguredNetworks();
+        WifiConfiguration configuration = null;
+        int netId = -1;
+        for (WifiConfiguration config : configurationList) {
+            if (config.SSID.equals(String.format("\"%s\"", ssid))) {
+                configuration = config;
+                configuration.preSharedKey = String.format("\"%s\"", WIFI_PASSWORD);
+                netId = configuration.networkId;
+                break;
+            }
+        }
+        if (null == configuration) {
+            configuration = wifiUtil.createWifiInfo(ssid, WIFI_PASSWORD, WifiUtil.WifiCipherType.WIFICIPHER_WPA);
+            netId = mWifiManager.addNetwork(configuration);
+        }
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-                List<WifiConfiguration> configurationList = mWifiManager.getConfiguredNetworks();
-                WifiConfiguration configuration = null;
-                int netId = -1;
-                for (WifiConfiguration config : configurationList) {
-                    if (config.SSID.equals(String.format("\"%s\"", ssid))) {
-                        configuration = config;
-                        configuration.preSharedKey = String.format("\"%s\"", WIFI_PASSWORD);
-                        netId = configuration.networkId;
-                        break;
-                    }
-                }
-                if (null == configuration) {
-                    configuration = wifiUtil.createWifiInfo(ssid, WIFI_PASSWORD, WifiUtil.WifiCipherType.WIFICIPHER_WPA);
-                    netId = mWifiManager.addNetwork(configuration);
-                }
-
-                Method connectMethod = connectWifiByReflectMethod(netId);
-                boolean enabled = false;
-                if (connectMethod == null) {
-                    Log.i(TAG, "connect wifi by enableNetwork method, Add by jiangping.li");
-                    // 通用API
-                    enabled = mWifiManager.enableNetwork(netId, true);
-                }
-                Log.d("wangping", String.format("wifi link to ssid:%s,flag:%s", ssid, enabled));
-
-//                try {
-//                    Thread.sleep(5000L);
-//                } catch (InterruptedException e) {
-//                    Log.d(TAG, "sleep error!");
-//                }
-//                if (!enabled) {
-//                    Message msg = new Message();
-//                    msg.what = 0;
-//                    handler.sendMessage(msg);
-//                }
-//
-//            }
-//        }).start();
+        Method connectMethod = connectWifiByReflectMethod(netId);
+        boolean enabled = false;
+        if (connectMethod == null) {
+            Log.i(TAG, "connect wifi by enableNetwork method, Add by jiangping.li");
+            // 通用API
+            enabled = mWifiManager.enableNetwork(netId, true);
+        }
+        Log.d("wangping", String.format("wifi link to ssid:%s,flag:%s", ssid, enabled));
 
     }
 
@@ -554,8 +518,6 @@ public class Page2Activity extends BaseActivity
                 ssidList.add(result.SSID);
             }
         }
-//        ssidList.add("JG-VDB-II-Cruze-ECU1-0001");
-//        ssidList.add("JG-VDB-II-Version-ECU2-0002");
         Collections.sort(ssidList, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
@@ -615,7 +577,6 @@ public class Page2Activity extends BaseActivity
      * @throws Exception
      */
     private CarSystem getCarSystem(String str) throws Exception {
-        //{"message":"search","result":"ok","data":{"type":"JG-TD-Type-I","version":"1.0","SN":"JG-TD-I-Verano-BCM1-0002","model":"BCM1","name":"别克威朗车身电气系统","state":"unconnected"}}
         if (null == str || "".equals(str)) return null;
         CarSystem carSystem = null;
         JSONObject obj = new JSONObject(str);

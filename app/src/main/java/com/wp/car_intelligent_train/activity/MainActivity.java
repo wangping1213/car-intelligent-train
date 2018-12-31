@@ -149,19 +149,6 @@ public class MainActivity extends BaseActivity implements NetworkChangeReceiver.
                 ssidList.add(result.SSID);
             }
         }
-//        ssidList.add("JG-VDB-II-Cruze-ECU1-0001");
-//        ssidList.add("JG-VDB-II-Version-ECU2-0002");
-//        ssidList.add("JG-VDB-II-OTHER-OTHER-0001");
-//        Collections.sort(ssidList, new Comparator<String>() {
-//            @Override
-//            public int compare(String o1, String o2) {
-//                if (o1 != null && !"".equals(o1) && o2 != null && !"".equals(o2)) {
-//                    return o1.compareTo(o2);
-//                }
-//                return 0;
-//            }
-//        });
-
 
         Intent t = new Intent(this, Page2Activity.class);
         t.putStringArrayListExtra("ssidList", ssidList);

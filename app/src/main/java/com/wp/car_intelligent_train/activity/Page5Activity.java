@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -24,17 +23,17 @@ import com.bumptech.glide.Glide;
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.R;
 import com.wp.car_intelligent_train.activity.tip.TipConnFailedActivity;
-import com.wp.car_intelligent_train.activity.tip.TipExitActivity;
 import com.wp.car_intelligent_train.adapter.P5CarSystemAdapter;
 import com.wp.car_intelligent_train.application.MyApplication;
 import com.wp.car_intelligent_train.base.BaseActivity;
 import com.wp.car_intelligent_train.decoration.MySpaceItemDecoration;
 import com.wp.car_intelligent_train.dialog.LoadingDialogUtils;
 import com.wp.car_intelligent_train.entity.CarSystem;
+import com.wp.car_intelligent_train.entity.UdpResult;
 import com.wp.car_intelligent_train.enums.P5DrawableEnum;
 import com.wp.car_intelligent_train.holder.CommonViewHolder;
 import com.wp.car_intelligent_train.receiver.NetworkChangeReceiver;
-import com.wp.car_intelligent_train.udp.UdpClientFactory;
+import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 import com.wp.car_intelligent_train.udp.UdpSystem;
 import com.wp.car_intelligent_train.util.TimeUtil;
 import com.wp.car_intelligent_train.util.WifiUtil;
@@ -44,7 +43,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -219,7 +217,9 @@ public class Page5Activity extends BaseActivity
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                List<String> vbsList = (List<String>) application.getMap().get("vbsList");
+                UdpResult udpResult = (UdpResult) application.getMap().get("udpResult");
+                if (null == udpResult) udpResult = new UdpResult("search");
+                List<String> vbsList = udpResult.getDataByClass(List.class);
                 if (msg.what == 0 && (null == vbsList || vbsList.size() == 0)) {
                     jumpFailed();
                     return;
@@ -256,8 +256,7 @@ public class Page5Activity extends BaseActivity
                 Intent intent = null;
                 String deviceNo = "";
                 try {
-                    application.getMap().remove("searchFlag");
-                    application.getMap().remove("vbsList");
+                    Thread.sleep(Constant.UDP_WAIT_TIME);
                     Class<?> tClass = null;
                     if (!UdpClientFactory.TD_KEY.equals(type)) {
                         jsonObject = UdpSystem.search(type, handler);
@@ -315,6 +314,9 @@ public class Page5Activity extends BaseActivity
                                 LoadingDialogUtils.closeDialog(dialog);
                                 dialog = null;
                             }
+                        } else {
+                            jumpFailed();
+                            return;
                         }
                     }
                 } catch (Exception e) {

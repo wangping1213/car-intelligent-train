@@ -23,6 +23,7 @@ import com.wp.car_intelligent_train.udp.UdpSystem;
 import com.wp.car_intelligent_train.util.TimeUtil;
 import com.wp.car_intelligent_train.viewTarget.MyViewTarget;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -129,6 +130,7 @@ public class OnMyClickListener implements View.OnClickListener {
                                 }
                                 Log.d("wangping", String.format("setPoint end:%s", TimeUtil.getNowStrTime()));
 
+                                UdpSystem.getNowState();
                                 final long page4Time = System.currentTimeMillis();
                                 if (null != dialog) application.getMap().put("dialog", dialog);
                                 Page4Activity page4Activity = (Page4Activity) myContext;

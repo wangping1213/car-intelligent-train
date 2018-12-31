@@ -11,7 +11,7 @@ public class Constant {
     public static final int UDP_VBS_PORT = 31130;
     public static final String UDP_IP = "224.0.0.1";//广播地址
     public static final int UDP_TIMEOUT = 5000;//毫秒
-    public static final int UDP_WAIT_TIME = 200;//毫秒
+    public static final int UDP_WAIT_TIME = 1000;//毫秒
     public static final int UDP_BYTE_LENGTH = 512;//udp的字节数据长度
 
 

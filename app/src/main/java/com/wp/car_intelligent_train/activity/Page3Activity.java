@@ -1,5 +1,6 @@
 package com.wp.car_intelligent_train.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +13,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.R;
+import com.wp.car_intelligent_train.activity.tip.TipConnFailedActivity;
 import com.wp.car_intelligent_train.activity.tip.TipResetActivity;
 import com.wp.car_intelligent_train.adapter.P3CarPartAdapter;
 import com.wp.car_intelligent_train.application.MyApplication;
 import com.wp.car_intelligent_train.base.BaseActivity;
 import com.wp.car_intelligent_train.decoration.MySpaceItemDecoration;
+import com.wp.car_intelligent_train.dialog.LoadingDialogUtils;
 import com.wp.car_intelligent_train.entity.CarPart;
 import com.wp.car_intelligent_train.entity.CarPartPin;
 import com.wp.car_intelligent_train.holder.CommonViewHolder;
@@ -40,6 +43,7 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
     private RecyclerView recycler_view_system;
     private TextView app_title_name;
     private MyApplication application;
+    private Dialog dialog;
 
 
     private List<CarPart> data = new ArrayList<>();
@@ -78,7 +82,6 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
                 infoObj = new JSONObject(info);
                 String title = infoObj.getString("title");
                 app_title_name.setText(title);
-//                app_title_name.setText("爱上的咖啡哈迪斯的离开后覅椰蓉才能日以上若人我拉出认识到了");
                 JSONArray partArr = infoObj.getJSONArray("part");
                 if (null != partArr) {
                     for (int i=0; i<partArr.length(); i++) {
@@ -89,6 +92,8 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
             }
         } catch (Exception e) {
             Log.e(TAG, "initData error!", e);
+        } finally {
+            Log.d(TAG, String.format("page3 initData data.size=%s", data.size()));
         }
 
     }
@@ -126,16 +131,48 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
         return carPart;
     }
 
+    private void jumpFailed(String... tips) {
+        Intent intent = new Intent(this, TipConnFailedActivity.class);
+        if (tips.length > 0) {
+            ArrayList<String> tipList = new ArrayList<String>();
+            for (String tip : tips) {
+                tipList.add(tip);
+            }
+            intent.putStringArrayListExtra("tipList", tipList);
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        if (null != dialog) {
+            LoadingDialogUtils.closeDialog(dialog);
+            dialog = null;
+        }
+    }
 
     @Override
-    public void onItemClickListener(int position, View itemView) {
-//        ImageView iv_p3_system = (ImageView) itemView.findViewById(R.id.iv_p3_system);
-//        Glide.with(this).load(R.drawable.p3_list_bg_select).into(iv_p3_system);
+    public void onItemClickListener(final int position, final View itemView) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject obj = UdpSystem.getNowState();
+                    if (null == obj) {
+                        jumpFailed();
+                        return;
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CarPart carPart = data.get(position);
+                            Intent intent = new Intent(Page3Activity.this, Page4Activity.class);
+                            intent.putExtra("carPart", carPart);
+                            Page3Activity.this.startActivity(intent);
+                        }
+                    });
+                } catch (Exception e) {
+                }
+            }
+        }).start();
 
-        CarPart carPart = data.get(position);
-        Intent intent = new Intent(this, Page4Activity.class);
-        intent.putExtra("carPart", carPart);
-        this.startActivity(intent);
     }
 
     @Override

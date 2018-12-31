@@ -8,19 +8,15 @@ import android.util.Log;
 
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.application.MyApplication;
-import com.wp.car_intelligent_train.thread.KeepConnectThread;
+import com.wp.car_intelligent_train.entity.UdpResult;
+import com.wp.car_intelligent_train.udp.client.IUdpClient;
+import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * udp子系统的使用类
@@ -41,10 +37,7 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject search(String type, Handler... handlers) throws Exception {
-        if (null != thread) thread.mySuspend();
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        String str = "";
-        JSONObject obj = null;
         String msg = "";
         if (UdpClientFactory.VBS_KEY.equals(type)) {
             msg = "{\"cmd\":\"search\",\"parm\":{\"type\":\"JG-TD-Type-I\"}}";
@@ -52,30 +45,27 @@ public class UdpSystem {
             msg = "{\"cmd\":\"search\",\"parm\":{\"type\":\"JG-VDB-Type-II\"}}";
         }
         JSONObject result = null;
-        int count = 0;
-        while (true) {
-            try {
-                udpClient.sendMsg(msg);
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (UdpClientFactory.VBS_KEY.equals(type)) {
-                    receiveDevices(udpClient, handlers);
-                } else if (UdpClientFactory.TBOX_KEY.equals(type)) {
-                    str = udpClient.receive();
-                    obj = new JSONObject(str);
-                    Log.d("wangping", String.format("receive str:%s", str));
-                    result = obj.getJSONObject("data");
+        udpClient.sendMsg(msg);
+        application.removeMapData("udpResult");
+        if (UdpClientFactory.VBS_KEY.equals(type)) {
+            Thread.sleep(Constant.UDP_WAIT_TIME * 3);
+            UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+            if (null == udpResult) udpResult = new UdpResult("search");
+            udpResult.setFlag("1");
+            if (null != handlers && handlers.length > 0) {
+                Handler hd = handlers[0];
+                int what = 0;
+                if (null != udpResult.getData()) {
+                    what = 1;
                 }
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("search error!"), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else break;
+                hd.sendEmptyMessage(what);
             }
+        } else if (UdpClientFactory.TBOX_KEY.equals(type)) {
+            Thread.sleep(Constant.UDP_WAIT_TIME);
+            UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+            if (null == udpResult) udpResult = new UdpResult("search");
+            result = udpResult.getDataByClass(JSONObject.class);
         }
-        if (null != thread) thread.myResume();
         return result;
     }
 
@@ -86,33 +76,15 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject connect(String deviceNo, String type) throws Exception {
-        if (null != thread) thread.mySuspend();
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        String str = "";
-        JSONObject obj = null;
         JSONObject result = null;
+        udpClient.sendMsg(String.format("{\"cmd\":\"connect\",\"parm\":{\"SN\":\"%s\"}}", deviceNo));
+        application.removeMapData("udpResult");
         Thread.sleep(Constant.UDP_WAIT_TIME);
-        int count = 0;
-        while (true) {
-            try {
-                udpClient.sendMsg(String.format("{\"cmd\":\"connect\",\"parm\":{\"SN\":\"%s\"}}", deviceNo));
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                str = udpClient.receive();
-                Log.d("wangping", String.format("receive str:%s", str));
-                obj = new JSONObject(str);
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("connect error!"), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else break;
-            }
-        }
-
-        if (null != thread) thread.myResume();
-        return obj;
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("connect");
+        result = udpResult.getDataByClass(JSONObject.class);
+        return result;
     }
 
     /**
@@ -122,38 +94,16 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject disconnect(int customId, String type) throws Exception {
-        if (null != thread) thread.mySuspend();
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        String str = "";
-        JSONObject obj = null;
+        udpClient.sendMsg(String.format("{\"cmd\":\"disconnect\",\"parm\":{\"ID\":\"%s\"}}", customId));
         JSONObject result = null;
+
+        application.removeMapData("udpResult");
         Thread.sleep(Constant.UDP_WAIT_TIME);
-        int count = 0;
-        while (true) {
-            try {
-                if (!KeepConnectThread.isLock && application.getUdpState() == Constant.STATE_CONNECTED) {
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
-                    continue;
-                }
-                udpClient.sendMsg(String.format("{\"cmd\":\"disconnect\",\"parm\":{\"ID\":\"%s\"}}", customId));
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                str = udpClient.receive();
-                Log.d("wangping", String.format("receive str:%s", str));
-                obj = new JSONObject(str);
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("disconnect error!"), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else throw e;
-            }
-        }
-
-        if (null != thread) thread.myResume();
-
-        return obj;
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("disconnect");
+        result = udpResult.getDataByClass(JSONObject.class);
+        return result;
     }
 
     /**
@@ -163,23 +113,44 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject getState(String type, int customId, long... waitTimes) throws Exception {
-        String str = "";
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        JSONObject obj = null;
         JSONObject result = null;
-        udpClient.sendMsg(String.format("{\"cmd\":\"getState\",\"parm\":{\"ID\":%s}}", customId));
-        long waitTime = Constant.UDP_WAIT_TIME;
-        if (null != waitTimes && waitTimes.length > 0) {
-            waitTime = waitTimes[0];
+        if (waitTimes.length > 0) {
+            application.getMap().put("getState_flag", "2");
+        } else {
+            application.getMap().put("getState_flag", "1");
         }
-        Thread.sleep(waitTime);
-        str = udpClient.receive();
-//        if (waitTime == Constant.UDP_WAIT_TIME) {
-            Log.d("wangping", String.format("receive str:%s", str));
-//        }
-        obj = new JSONObject(str);
-        result = obj.getJSONObject("data");
+        udpClient.sendMsg(String.format("{\"cmd\":\"getState\",\"parm\":{\"ID\":%s}}", customId));
+
+        if (waitTimes.length == 0) {
+            application.removeMapData("udpResult");
+        }
+
+        Thread.sleep(Constant.UDP_WAIT_TIME);
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("getState");
+        if (waitTimes.length == 0 && "getState".equals(udpResult.getCmdType())) {
+            result = udpResult.getDataByClass(JSONObject.class);
+        } else {
+            result = application.getMapData("getState_retObj", JSONObject.class);
+        }
         return result;
+    }
+
+    public static JSONObject getNowState() {
+        JSONObject obj = null;
+        try {
+            obj = UdpSystem.getState(application.getType(), application.getCustomId());
+            JSONArray stateArr = obj.getJSONArray("state");
+
+            for (int i = 0; i < stateArr.length(); i++) {
+                application.getPointMap().put(i + 1, stateArr.getInt(i));
+            }
+            application.setStateTime(System.currentTimeMillis());
+        } catch (Exception e) {
+            Log.e(TAG, "page4 getState error!", e);
+        }
+        return obj;
     }
 
     public static Thread keepConnect(final MyApplication application, final Context context, final Class activityClass) throws Exception {
@@ -187,18 +158,6 @@ public class UdpSystem {
         thread = new KeepConnectThread(application, context, activityClass);
         thread.start();
         return thread;
-    }
-
-    public static JSONObject getInfoPart(int customId, int num, String type) throws Exception {
-        IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        udpClient.sendMsg(String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, num));
-        Thread.sleep(100L);
-        String str = udpClient.receive();
-        Log.d("wangping", String.format("receive getInfoPart:%s", str));
-        JSONObject obj = null;
-        obj = new JSONObject(str);
-        JSONObject data = obj.getJSONObject("data");
-        return data;
     }
 
     /**
@@ -209,50 +168,32 @@ public class UdpSystem {
      * @throws Exception
      */
     public static String getInfo(int customId, String type) throws Exception {
-        thread.mySuspend();
-        JSONObject data = null;
-        Thread.sleep(Constant.UDP_WAIT_TIME);
+        IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
+        StringBuffer sb = null;
+        String result = null;
+        udpClient.sendMsg(String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, 1));
+        application.removeMapData("udpResult");
+        Thread.sleep(Constant.UDP_WAIT_TIME * 3);
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("getInfo");
+        sb = udpResult.getDataByClass(StringBuffer.class);
         int count = 0;
-        while (true) {
-            try {
-                if (!KeepConnectThread.isLock && application.getUdpState() == Constant.STATE_CONNECTED) {
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
-                    continue;
-                }
-                data = UdpSystem.getInfoPart(customId, 1, type);
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("getInfoPart num:%s error!", 1), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else break;
-            }
-        }
-        StringBuffer sb = new StringBuffer();
-        int sum = data.getInt("sum");
-        sb.append(data.getString("data"));
-
-        for (int i = 2; i <= sum; ) {
+        if ("getInfo".equals(udpResult.getCmdType())) {
             while (true) {
-                try {
-                    data = UdpSystem.getInfoPart(customId, i, type);
-                    i++;
+                if ("1".equals(udpResult.getFlag())) {
+                    result = new String(Base64.decode(sb.toString(), Base64.DEFAULT));
                     count = 0;
                     break;
-                } catch (Exception e) {
-                    Log.e("wangping", String.format("getInfoPart num:%s error!", i), e);
+                } else {
+                    Log.d(TAG, "getPart count:5");
+                    if (count <= 15) break;
                     count++;
                     Thread.sleep(Constant.UDP_WAIT_TIME);
-                    if (count <= 3) continue;
-                    else break;
                 }
             }
-            sb.append(data.getString("data"));
         }
-        thread.myResume();
-        return new String(Base64.decode(sb.toString(), Base64.DEFAULT));
+
+        return result;
 
 
     }
@@ -267,36 +208,17 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject setPoint(int customId, int aNum, int aType, String type) throws Exception {
-        thread.mySuspend();
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
+        JSONObject result = null;
         String msg = String.format("{\"cmd\":\"setPoint\",\"parm\":{\"ID\":%s,\"aNum\":%s,\"aType\":%s}}", customId, aNum, aType);
-        JSONObject data = null;
-        int count = 0;
-        while (true) {
-            try {
-                if (!KeepConnectThread.isLock && application.getUdpState() == Constant.STATE_CONNECTED) {
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
-                    continue;
-                }
-                udpClient.sendMsg(msg);
-                Log.d("wangping", msg);
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                String str = udpClient.receive();
-                JSONObject obj = null;
-                obj = new JSONObject(str);
-                data = obj.getJSONObject("data");
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("setPoint customId:%s, nNum:%s, aType:%s error!", customId, aNum, aType), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else break;
-            }
-        }
-        thread.myResume();
-        return data;
+        udpClient.sendMsg(msg);
+
+        application.removeMapData("udpResult");
+        Thread.sleep(Constant.UDP_WAIT_TIME );
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("setPoint");
+        result = udpResult.getDataByClass(JSONObject.class);
+        return result;
 
     }
 
@@ -308,34 +230,16 @@ public class UdpSystem {
      * @throws Exception
      */
     public static JSONObject resetPoint(int customId, String type) throws Exception {
-        thread.mySuspend();
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
-        JSONObject obj = null;
-        int count = 0;
-        Thread.sleep(Constant.UDP_WAIT_TIME);
-        while (true) {
-            try {
-                if (!KeepConnectThread.isLock && application.getUdpState() == Constant.STATE_CONNECTED) {
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
-                    continue;
-                }
-                udpClient.sendMsg(String.format("{\"cmd\":\"resetPoint\",\"parm\":{\"ID\":%s}}", customId));
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                String str = udpClient.receive();
-                obj = null;
-                obj = new JSONObject(str);
-                count = 0;
-                break;
-            } catch (Exception e) {
-                Log.e("wangping", String.format("resetPoint customId:%s error!", customId), e);
-                count++;
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                if (count <= 3) continue;
-                else break;
-            }
-        }
-        thread.myResume();
-        return obj;
+        udpClient.sendMsg(String.format("{\"cmd\":\"resetPoint\",\"parm\":{\"ID\":%s}}", customId));
+        JSONObject result = null;
+
+        application.removeMapData("udpResult");
+        Thread.sleep(Constant.UDP_WAIT_TIME );
+        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
+        if (null == udpResult) udpResult = new UdpResult("resetPoint");
+        result = udpResult.getDataByClass(JSONObject.class);
+        return result;
 
     }
 
@@ -351,30 +255,5 @@ public class UdpSystem {
         UdpSystem.application = application;
     }
 
-    private static void receiveDevices(final IUdpClient udpClient, Handler... handlers) throws Exception {
-        String str = "";
-        List<String> vbsList = new ArrayList<>();
-        Handler hd = handlers[0];
-        Message msg = new Message();
-        application.getMap().put("vbsList", vbsList);
-        for (int i = 0; i < 15; i++) {
-            try {
-                Thread.sleep(Constant.UDP_WAIT_TIME);
-                str = udpClient.receive();
-                if (null != str && !"".equals(str)) {
-                    vbsList.add(str);
-                }
-            } catch (Exception e) {
-                msg.what = 0;
-                Log.d(TAG, String.format("set searchFlag:%s", false));
-                break;
-            }
-        }
 
-        msg.what = 1;
-        if (null != hd) {
-            hd.sendMessage(msg);
-        }
-        Log.d(TAG, String.format("set searchFlag:%s", true));
-    }
 }

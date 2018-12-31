@@ -170,10 +170,10 @@ public class CardScaleHelper {
         rightView = mRecyclerView.getLayoutManager().findViewByPosition(rightPos);
 
 
-        Log.d("wangping", String.format("leftPos:%s, currentPos:%s, rightPos:%s",
-                (mCurrentItemPos - 1 == -1) ? (size - 1) : (mCurrentItemPos - 1),
-                mCurrentItemPos,
-                (mCurrentItemPos + 1 == size) ? 0 : (mCurrentItemPos + 1)));
+//        Log.d("wangping", String.format("leftPos:%s, currentPos:%s, rightPos:%s",
+//                (mCurrentItemPos - 1 == -1) ? (size - 1) : (mCurrentItemPos - 1),
+//                mCurrentItemPos,
+//                (mCurrentItemPos + 1 == size) ? 0 : (mCurrentItemPos + 1)));
 
         if (leftView != null) {
             double x = (leftView.getRight() + leftView.getLeft()) * 1.0 / 2;

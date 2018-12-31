@@ -25,7 +25,12 @@ import com.wp.car_intelligent_train.entity.CarPart;
 import com.wp.car_intelligent_train.entity.CarPartPin;
 import com.wp.car_intelligent_train.holder.CommonViewHolder;
 import com.wp.car_intelligent_train.receiver.NetworkChangeReceiver;
+import com.wp.car_intelligent_train.udp.UdpSystem;
 import com.wp.car_intelligent_train.util.TimeUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,9 +70,7 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
         Log.d(TAG, String.format("page4-initView-start:%s", TimeUtil.getNowStrTime()));
         final long start = System.currentTimeMillis();
         application = (MyApplication) this.getApplication();
-//        Glide.with(this).load(R.drawable.bg1).into((ImageView) findViewById(R.id.iv_bg));
         Glide.with(this).load(R.drawable.p4_icon_menu).into((ImageView) findViewById(R.id.iv_back));
-//        Glide.with(this).load(R.drawable.p3_icon_reset).into((ImageView) findViewById(R.id.iv_reset));
         recycler_view_system = (RecyclerView) findViewById(R.id.recycle_view_system);
 
         app_title_name = (TextView) findViewById(R.id.app_title_name);
@@ -76,7 +79,6 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
         setAdapter(data);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler_view_system.setLayoutManager(layoutManager);
-//        Log.d(TAG, String.format("start:%s", TimeUtil.getNowStrTime()));
 
         final Dialog dialog = LoadingDialogUtils.createLoadingDialog(this, "加载中....");
         if (null != dialog) application.getMap().put("dialog", dialog);
@@ -123,13 +125,13 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
             if (application.getStateTime() >= page4Time) {
                 checkboxMap.clear();
                 checkboxMap.putAll(application.getPointMap());
-                if (pos != -1) {
-                    adapter.notifyItemChanged(pos, 1);
-                } else {
-                    for (int j = 0; j < data.size(); j++) {
-                        adapter.notifyItemChanged(j, 1);
-                    }
-                }
+//                if (pos != -1) {
+//                    adapter.notifyItemChanged(pos, 1);
+//                } else {
+//                    for (int j = 0; j < data.size(); j++) {
+//                        adapter.notifyItemChanged(j, 1);
+//                    }
+//                }
                 break;
             } else {
                 try {
@@ -148,11 +150,23 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
 
     }
 
-    private void setAdapter(List<CarPartPin> partPinList) {
-        adapter = new P4CarPinPartAdapter(this, partPinList, this);
-        recycler_view_system.setAdapter(adapter);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.dimen_10_dip);
-        recycler_view_system.addItemDecoration(new MySpaceItemDecoration(spacingInPixels));
+    private void setAdapter(final List<CarPartPin> partPinList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UdpSystem.getNowState();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter = new P4CarPinPartAdapter(Page4Activity.this, partPinList, Page4Activity.this);
+                        recycler_view_system.setAdapter(adapter);
+                        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.dimen_10_dip);
+                        recycler_view_system.addItemDecoration(new MySpaceItemDecoration(spacingInPixels));
+                    }
+                });
+            }
+        }).start();
+
     }
 
     private void initData2() {
@@ -186,6 +200,7 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
 
             Intent intent = new Intent(this, TipResetActivity.class);
             intent.putExtra("page", "4");
+
             this.startActivity(intent);
             reloadContent();
         }

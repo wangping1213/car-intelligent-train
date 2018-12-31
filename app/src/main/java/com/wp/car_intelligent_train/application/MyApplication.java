@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 全局变量类
@@ -25,13 +26,13 @@ public class MyApplication extends Application {
 
     private String type;
 
-    private Map<Integer, Integer> pointMap = new HashMap<>();
+    private Map<Integer, Integer> pointMap = new ConcurrentHashMap<>();
 
-    private Map<String, Object> map = new HashMap<>();
+    private Map<String, Object> map = new ConcurrentHashMap<>();
 
     private long stateTime;//取得getState结果的时间
 
-    List<Activity> activityList;
+    private List<Activity> activityList;
 
     public void onCreate() {
         super.onCreate();
@@ -59,6 +60,10 @@ public class MyApplication extends Application {
         }
     }
 
+    public Activity getActivity(int index) {
+        return this.activityList.get(index);
+    }
+
     /**
      * 销毁所有的Activity
      */
@@ -67,6 +72,14 @@ public class MyApplication extends Application {
         for (Activity activity : activityList) {
             activity.finish();
         }
+    }
+
+    public <T> T getMapData(String key, Class<T> tClass) {
+        return (T) this.getMap().get(key);
+    }
+
+    public void removeMapData(String key) {
+        this.getMap().remove(key);
     }
 
     /**

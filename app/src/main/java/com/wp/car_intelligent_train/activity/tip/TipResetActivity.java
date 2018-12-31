@@ -1,5 +1,6 @@
 package com.wp.car_intelligent_train.activity.tip;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import com.wp.car_intelligent_train.R;
 import com.wp.car_intelligent_train.application.MyApplication;
 import com.wp.car_intelligent_train.base.BaseActivity;
+import com.wp.car_intelligent_train.dialog.LoadingDialogUtils;
 import com.wp.car_intelligent_train.udp.UdpSystem;
 
 import org.json.JSONObject;
@@ -48,6 +50,7 @@ public class TipResetActivity extends BaseActivity {
                     if (null != retObj) {
                         String message = retObj.getString("result");
                         if (null != message && message.equals("ok")) {
+                            UdpSystem.getNowState();
                             Intent intent = new Intent(TipResetActivity.this, TipTextActivity.class);
                             TipResetActivity.this.startActivity(intent);
                             Thread.sleep(2000L);
@@ -55,6 +58,10 @@ public class TipResetActivity extends BaseActivity {
                                 application.setReloadFlag(1);
                             }
                         }
+                    } else {
+                        Intent intent = new Intent(TipResetActivity.this, TipConnFailedActivity.class);
+                        TipResetActivity.this.startActivity(intent);
+                        return;
                     }
                 } catch (Exception e) {
                     Log.e(TAG, String.format("reset error!, customId:%s", customId), e);
