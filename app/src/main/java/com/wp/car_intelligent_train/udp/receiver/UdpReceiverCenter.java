@@ -1,13 +1,8 @@
 package com.wp.car_intelligent_train.udp.receiver;
 
-import android.util.Log;
-
 import com.wp.car_intelligent_train.application.MyApplication;
 import com.wp.car_intelligent_train.thread.UdpReceiverRunnable;
-import com.wp.car_intelligent_train.udp.client.IUdpClient;
 import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
-
-import org.json.JSONObject;
 
 /**
  * udp消息接收中心

@@ -1,12 +1,8 @@
 package com.wp.car_intelligent_train.udp.receiver;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
-import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.entity.UdpResult;
-import com.wp.car_intelligent_train.udp.client.IUdpClient;
 import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 
 import org.json.JSONException;

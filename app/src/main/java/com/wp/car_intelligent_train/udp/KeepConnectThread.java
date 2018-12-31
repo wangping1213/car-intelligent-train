@@ -6,9 +6,7 @@ import android.util.Log;
 
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.application.MyApplication;
-import com.wp.car_intelligent_train.udp.UdpSystem;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**

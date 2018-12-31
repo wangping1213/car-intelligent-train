@@ -7,10 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.wp.car_intelligent_train.Constant;
 import com.wp.car_intelligent_train.R;
 import com.wp.car_intelligent_train.activity.tip.TipConnFailedActivity;

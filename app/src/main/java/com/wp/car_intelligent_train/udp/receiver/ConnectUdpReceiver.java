@@ -3,13 +3,9 @@ package com.wp.car_intelligent_train.udp.receiver;
 import android.util.Log;
 
 import com.wp.car_intelligent_train.entity.UdpResult;
-import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 接收connect的udp返回值

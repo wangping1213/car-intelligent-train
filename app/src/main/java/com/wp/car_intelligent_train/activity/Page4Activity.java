@@ -28,10 +28,6 @@ import com.wp.car_intelligent_train.receiver.NetworkChangeReceiver;
 import com.wp.car_intelligent_train.udp.UdpSystem;
 import com.wp.car_intelligent_train.util.TimeUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

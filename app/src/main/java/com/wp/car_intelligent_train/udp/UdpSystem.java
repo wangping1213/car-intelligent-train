@@ -2,7 +2,6 @@ package com.wp.car_intelligent_train.udp;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
@@ -14,9 +13,6 @@ import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * udp子系统的使用类

@@ -33,8 +33,8 @@ import com.wp.car_intelligent_train.entity.UdpResult;
 import com.wp.car_intelligent_train.enums.P5DrawableEnum;
 import com.wp.car_intelligent_train.holder.CommonViewHolder;
 import com.wp.car_intelligent_train.receiver.NetworkChangeReceiver;
-import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 import com.wp.car_intelligent_train.udp.UdpSystem;
+import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 import com.wp.car_intelligent_train.util.TimeUtil;
 import com.wp.car_intelligent_train.util.WifiUtil;
 
