@@ -8,6 +8,9 @@ import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 接收setPoint的udp返回值
  * @author wangping
@@ -20,6 +23,7 @@ public class GetInfoUdpReceiver extends BaseUdpReceiver {
     @Override
     public JSONObject handle(String type, String result) {
         UdpResult udpResult = getApplication().getMapData("udpResult", UdpResult.class);
+
         if (null == udpResult) {
             udpResult = new UdpResult(CMD_TYPE);
             getApplication().getMap().put("udpResult", udpResult);
@@ -28,30 +32,33 @@ public class GetInfoUdpReceiver extends BaseUdpReceiver {
         JSONObject retObj = null;
         String msg = "";
         int customId = getApplication().getCustomId();
-
-        StringBuffer sb = null;
+        Map<Integer, String> retMap = null;
         if (CMD_TYPE.equals(udpResult.getCmdType())) {
             if ("1".equals(udpResult.getFlag())) return null;
-            else sb = udpResult.getDataByClass(StringBuffer.class);
-            if (null == sb) sb = new StringBuffer();
+            else retMap = udpResult.getDataByClass(HashMap.class);
+            if (null == retMap) retMap = new HashMap<>();
             try {
                 JSONObject obj = new JSONObject(result);
                 retObj = obj.getJSONObject("data");
                 int sum = retObj.getInt("sum");
                 int num = retObj.getInt("num");
-                sb.append(retObj.getString("data"));
+                udpResult.setCount(sum);
+                String str = retObj.getString("data");
+                retMap.put(num, str);
                 if (num < sum) {
-                    msg = String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, num + 1);
-                    Thread.sleep(20L);
+                    if (null != retMap.get(num+1)) return retObj;
+                    msg = String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, num+1);
                     udpClient.sendMsg(msg);
                     Log.d(TAG, String.format("getPart msg:%s", msg));
                 } else {
-                    udpResult.setFlag("1");
+                    if (retMap.keySet().size() == sum) {
+                        udpResult.setFlag("1");
+                    }
                 }
             } catch (Exception e) {
-                Log.w(TAG, "getState cmd error_1!");
+                Log.w(TAG, "getInfo cmd error_1!");
             } finally {
-                udpResult.setData(sb);
+                udpResult.setData(retMap);
             }
         }
 

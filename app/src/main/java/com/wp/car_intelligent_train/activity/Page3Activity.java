@@ -59,7 +59,8 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
         recycler_view_system = (RecyclerView) findViewById(R.id.recycle_view_system);
 
         app_title_name = (TextView) findViewById(R.id.app_title_name);
-
+        application.getMap().put("returnFlag", false);
+        application.setCurrentActivityClass(this.getClass());
         initData();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler_view_system.setLayoutManager(layoutManager);
@@ -163,7 +164,9 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
                             CarPart carPart = data.get(position);
                             Intent intent = new Intent(Page3Activity.this, Page4Activity.class);
                             intent.putExtra("carPart", carPart);
-                            Page3Activity.this.startActivity(intent);
+                            if (!application.getMapData("returnFlag", Boolean.class) && application.getCurrentActivityClass() == Page3Activity.class) {
+                                Page3Activity.this.startActivity(intent);
+                            }
                         }
                     });
                 } catch (Exception e) {
@@ -179,6 +182,7 @@ public class Page3Activity extends BaseActivity implements CommonViewHolder.onIt
     }
 
     public void back(View view) {
+        application.getMap().put("returnFlag", true);
         this.finish();
 //        super.onCreate(null);
     }

@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class UdpResult implements Serializable {
 
     private String flag = "0";
+    private int count = 0;
     private String cmdType;
     private Object data;
 
@@ -52,5 +53,13 @@ public class UdpResult implements Serializable {
 
     public <T> T getDataByClass(Class<T> tClass) {
         return (T) this.data;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.wp.car_intelligent_train.Constant;
+import com.wp.car_intelligent_train.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,8 @@ public class MyApplication extends Application {
     private long stateTime;//取得getState结果的时间
 
     private List<Activity> activityList;
+
+    private Class<?> currentActivityClass;
 
     public void onCreate() {
         super.onCreate();
@@ -141,5 +144,13 @@ public class MyApplication extends Application {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Class<?> getCurrentActivityClass() {
+        return currentActivityClass;
+    }
+
+    public void setCurrentActivityClass(Class<?> currentActivityClass) {
+        this.currentActivityClass = currentActivityClass;
     }
 }

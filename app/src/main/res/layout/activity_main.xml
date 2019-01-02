@@ -29,8 +29,8 @@
 
         <ImageView
             android:id="@+id/iv_p1_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_250_dip"
             android:scaleType="fitXY"
             android:contentDescription="@string/app_name"
             />

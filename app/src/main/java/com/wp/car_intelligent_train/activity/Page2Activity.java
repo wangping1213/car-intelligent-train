@@ -91,6 +91,9 @@ public class Page2Activity extends BaseActivity
         dialog = LoadingDialogUtils.createLoadingDialog(Page2Activity.this, "加载中...");
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         application = (MyApplication) this.getApplication();
+
+        application.getMap().put("returnFlag", false);
+        application.setCurrentActivityClass(this.getClass());
         UdpReceiverCenter.newInstance(application);
         UdpSystem.setApplication(application);
         registerBroadcast();
@@ -246,7 +249,9 @@ public class Page2Activity extends BaseActivity
                         Intent intent = new Intent(Page2Activity.this, Page5Activity.class);
                         intent.putExtra("carSystemList", carSystemList);
                         intent.putExtra("currentSsid", currentSsid);
-                        Page2Activity.this.startActivity(intent);
+                        if (!application.getMapData("returnFlag", Boolean.class) && application.getCurrentActivityClass() == Page2Activity.class) {
+                            Page2Activity.this.startActivity(intent);
+                        }
                     } catch (Exception e) {
                         Log.e(TAG, "from vbsList to carSystemList error!", e);
                     }
@@ -311,7 +316,9 @@ public class Page2Activity extends BaseActivity
 
                             String info = UdpSystem.getInfo(application.getCustomId(), type);
                             intent.putExtra("info", info);
-                            Page2Activity.this.startActivity(intent);
+                            if (!application.getMapData("returnFlag", Boolean.class) && application.getCurrentActivityClass() == Page2Activity.class) {
+                                Page2Activity.this.startActivity(intent);
+                            }
                             if (null != dialog) {
                                 LoadingDialogUtils.closeDialog(dialog);
                                 dialog = null;
@@ -473,6 +480,7 @@ public class Page2Activity extends BaseActivity
     }
 
     public void back(View view) {
+        application.getMap().put("returnFlag", true);
         this.finish();
     }
 

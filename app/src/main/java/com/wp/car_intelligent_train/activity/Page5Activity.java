@@ -92,6 +92,9 @@ public class Page5Activity extends BaseActivity
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         application = (MyApplication) this.getApplication();
         UdpSystem.setApplication(application);
+        application.getMap().put("returnFlag", false);
+        application.setCurrentActivityClass(this.getClass());
+
         registerBroadcast();
         Glide.with(this).load(R.drawable.p5_top_bg).into((ImageView) this.findViewById(R.id.iv_top_bg));
         Glide.with(this).load(R.drawable.p5_vbs).into((ImageView) this.findViewById(R.id.iv_vbs));
@@ -309,7 +312,9 @@ public class Page5Activity extends BaseActivity
 
                             String info = UdpSystem.getInfo(application.getCustomId(), type);
                             intent.putExtra("info", info);
-                            Page5Activity.this.startActivity(intent);
+                            if (!application.getMapData("returnFlag", Boolean.class) && application.getCurrentActivityClass() == Page5Activity.class) {
+                                Page5Activity.this.startActivity(intent);
+                            }
                             if (null != dialog) {
                                 LoadingDialogUtils.closeDialog(dialog);
                                 dialog = null;
@@ -473,6 +478,7 @@ public class Page5Activity extends BaseActivity
     }
 
     public void back(View view) {
+        application.getMap().put("returnFlag", true);
         this.finish();
     }
 

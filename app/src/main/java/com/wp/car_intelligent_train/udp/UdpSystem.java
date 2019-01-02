@@ -14,6 +14,9 @@ import com.wp.car_intelligent_train.udp.client.UdpClientFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * udp子系统的使用类
  *
@@ -166,32 +169,45 @@ public class UdpSystem {
     public static String getInfo(int customId, String type) throws Exception {
         IUdpClient udpClient = UdpClientFactory.getUdpClient(type);
         StringBuffer sb = null;
+        Map<Integer, String> retMap = null;
         String result = null;
         udpClient.sendMsg(String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, 1));
         application.removeMapData("udpResult");
         Thread.sleep(Constant.UDP_WAIT_TIME * 3);
         UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
         if (null == udpResult) udpResult = new UdpResult("getInfo");
-        sb = udpResult.getDataByClass(StringBuffer.class);
+        retMap = udpResult.getDataByClass(HashMap.class);
         int count = 0;
         if ("getInfo".equals(udpResult.getCmdType())) {
-            while (true) {
                 if ("1".equals(udpResult.getFlag())) {
-                    result = new String(Base64.decode(sb.toString(), Base64.DEFAULT));
-                    count = 0;
-                    break;
+                    result = new String(Base64.decode(getInfo(retMap), Base64.DEFAULT));
                 } else {
-                    Log.d(TAG, "getPart count:5");
-                    if (count <= 15) break;
-                    count++;
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
+                    while (count <= 100) {
+                        if (retMap.keySet().size() < udpResult.getCount()) {
+                            udpClient.sendMsg(String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, retMap.size() + 1));
+                            Thread.sleep(Constant.UDP_WAIT_TIME);
+                            udpResult = application.getMapData("udpResult", UdpResult.class);
+                            retMap = udpResult.getDataByClass(HashMap.class);
+                            if ("1".equals(udpResult.getFlag())) {
+                                result = new String(Base64.decode(getInfo(retMap), Base64.DEFAULT));
+                            }
+                        }
+                        count++;
+                    }
                 }
-            }
         }
 
         return result;
 
 
+    }
+
+    private static String getInfo(Map<Integer, String> map) {
+        StringBuffer sb = new StringBuffer();
+        for (int i=1; i<=map.keySet().size(); i++) {
+            sb.append(map.get(i));
+        }
+        return sb.toString();
     }
 
     /**

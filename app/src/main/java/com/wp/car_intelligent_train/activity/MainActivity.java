@@ -64,6 +64,8 @@ public class MainActivity extends BaseActivity implements NetworkChangeReceiver.
         home_recycle_view.setLayoutManager(linearLayoutManager);
         registerBroadcast();
 
+        application.getMap().put("returnFlag", false);
+        application.setCurrentActivityClass(this.getClass());
         initData();
 
         // 设置适配器

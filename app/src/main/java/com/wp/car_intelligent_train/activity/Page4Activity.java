@@ -68,7 +68,8 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
         application = (MyApplication) this.getApplication();
         Glide.with(this).load(R.drawable.p4_icon_menu).into((ImageView) findViewById(R.id.iv_back));
         recycler_view_system = (RecyclerView) findViewById(R.id.recycle_view_system);
-
+        application.getMap().put("returnFlag", false);
+        application.setCurrentActivityClass(this.getClass());
         app_title_name = (TextView) findViewById(R.id.app_title_name);
 
         initData2();
@@ -186,6 +187,7 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
     }
 
     public void back(View view) {
+        application.getMap().put("returnFlag", true);
         this.finish();
     }
 

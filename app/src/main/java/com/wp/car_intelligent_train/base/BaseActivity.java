@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.wp.car_intelligent_train.R;
+import com.wp.car_intelligent_train.activity.MainActivity;
 import com.wp.car_intelligent_train.application.MyApplication;
 
 import butterknife.ButterKnife;
@@ -127,5 +128,19 @@ public abstract class BaseActivity extends AppCompatActivity {
             mToast.setText(desc);
         }
         mToast.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (application == null) {
+            // 得到Application对象
+            application = (MyApplication) this.getApplication();
+        }
+
+        if (!this.getClass().toString().contains("Tip")) {
+            application.getMap().put("returnFlag", false);
+            application.setCurrentActivityClass(this.getClass());
+        }
     }
 }
