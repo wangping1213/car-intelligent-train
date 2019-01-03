@@ -124,12 +124,20 @@ public class UdpSystem {
         if (waitTimes.length == 0) {
             application.removeMapData("udpResult");
         }
-
+        int count = 0;
         Thread.sleep(Constant.UDP_WAIT_TIME);
         UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
         if (null == udpResult) udpResult = new UdpResult("getState");
         if (waitTimes.length == 0 && "getState".equals(udpResult.getCmdType())) {
-            result = udpResult.getDataByClass(JSONObject.class);
+            while (count <= 10) {
+                if (null != udpResult) result = udpResult.getDataByClass(JSONObject.class);
+                count++;
+                if (null == result) {
+                    Thread.sleep(Constant.UDP_WAIT_TIME);
+                    udpResult = application.getMapData("udpResult", UdpResult.class);
+                    if (null != udpResult) result = udpResult.getDataByClass(JSONObject.class);
+                } else break;
+            }
         } else {
             result = application.getMapData("getState_retObj", JSONObject.class);
         }
@@ -182,7 +190,7 @@ public class UdpSystem {
                 if ("1".equals(udpResult.getFlag())) {
                     result = new String(Base64.decode(getInfo(retMap), Base64.DEFAULT));
                 } else {
-                    while (count <= 100) {
+                    while (count <= 5) {
                         if (retMap.keySet().size() < udpResult.getCount()) {
                             udpClient.sendMsg(String.format("{\"cmd\":\"getInfo\",\"parm\":{\"ID\":%s,\"num\":%s}}", customId, retMap.size() + 1));
                             Thread.sleep(Constant.UDP_WAIT_TIME);
@@ -225,11 +233,8 @@ public class UdpSystem {
         String msg = String.format("{\"cmd\":\"setPoint\",\"parm\":{\"ID\":%s,\"aNum\":%s,\"aType\":%s}}", customId, aNum, aType);
         udpClient.sendMsg(msg);
 
-        application.removeMapData("udpResult");
         Thread.sleep(Constant.UDP_WAIT_TIME );
-        UdpResult udpResult = application.getMapData("udpResult", UdpResult.class);
-        if (null == udpResult) udpResult = new UdpResult("setPoint");
-        result = udpResult.getDataByClass(JSONObject.class);
+        result = application.getMapData("setPoint_retObj", JSONObject.class);
         return result;
 
     }

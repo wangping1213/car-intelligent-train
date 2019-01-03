@@ -62,6 +62,7 @@ public class KeepConnectThread extends Thread {
                 udpState = application.getUdpState();
             }
         }
+        Log.d(TAG, "keep connect thread over!");
     }
 
     /**

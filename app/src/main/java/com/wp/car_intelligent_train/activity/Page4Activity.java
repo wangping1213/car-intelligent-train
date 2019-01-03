@@ -116,30 +116,36 @@ public class Page4Activity extends BaseActivity implements CommonViewHolder.onIt
         msg.sendToTarget();
     }
 
-    private void refreshData(Dialog dialog, long page4Time, int pos) {
+    private void refreshData(final Dialog dialog, final long page4Time, final int pos) {
         Log.d(TAG, String.format("stateTime:%s, page4Time:%s", application.getStateTime(), page4Time));
-        for (int i=0; i<20; i++) {
-            if (application.getStateTime() >= page4Time) {
-                checkboxMap.clear();
-                checkboxMap.putAll(application.getPointMap());
-//                if (pos != -1) {
-//                    adapter.notifyItemChanged(pos, 1);
-//                } else {
-//                    for (int j = 0; j < data.size(); j++) {
-//                        adapter.notifyItemChanged(j, 1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                for (int i=0; i<20; i++) {
+//                    if (application.getStateTime() >= page4Time) {
+                        checkboxMap.clear();
+                        checkboxMap.putAll(application.getPointMap());
+//                        if (pos != -1) {
+//                            adapter.notifyItemChanged(pos, 1);
+//                        } else {
+//                            for (int j = 0; j < data.size(); j++) {
+//                                adapter.notifyItemChanged(j, 1);
+//                            }
+//                        }
+//                        break;
+//                    } else {
+//                        try {
+//                            Thread.sleep(Constant.UDP_WAIT_TIME);
+//                        } catch (InterruptedException e) {
+//                            Log.e(TAG, "sleep error!", e);
+//                        }
 //                    }
 //                }
-                break;
-            } else {
-                try {
-                    Thread.sleep(Constant.UDP_WAIT_TIME);
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "sleep error!", e);
-                }
-            }
-        }
 
-        if (null != dialog) LoadingDialogUtils.closeDialog(dialog);
+                if (null != dialog) LoadingDialogUtils.closeDialog(dialog);
+            }
+        }).start();
+
     }
 
 

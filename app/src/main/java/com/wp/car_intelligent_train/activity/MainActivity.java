@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -62,7 +63,9 @@ public class MainActivity extends BaseActivity implements NetworkChangeReceiver.
         home_recycle_view = (MarqueeView) findViewById(R.id.home_recycle_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         home_recycle_view.setLayoutManager(linearLayoutManager);
+//        setWifiNeverSleep();
         registerBroadcast();
+
 
         application.getMap().put("returnFlag", false);
         application.setCurrentActivityClass(this.getClass());
@@ -83,6 +86,25 @@ public class MainActivity extends BaseActivity implements NetworkChangeReceiver.
         int smallestScreenWidth = config.smallestScreenWidthDp;
         Log.d(TAG, "smallest width : " + smallestScreenWidth);
         Log.d(TAG, String.format("540px-pd:%s", ScreenUtil.px2dip(this, 540F)));
+    }
+
+    private void setWifiNeverSleep(){
+        int wifiSleepPolicy=0;
+        wifiSleepPolicy= Settings.System.getInt(getContentResolver(),
+                Settings.Global.WIFI_SLEEP_POLICY,
+                Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+        System.out.println("---> 修改前的Wifi休眠策略值 WIFI_SLEEP_POLICY="+wifiSleepPolicy);
+
+
+        Settings.System.putInt(getContentResolver(),
+                Settings.Global.WIFI_SLEEP_POLICY,
+                Settings.Global.WIFI_SLEEP_POLICY_NEVER);
+
+
+        wifiSleepPolicy=Settings.System.getInt(getContentResolver(),
+                Settings.Global.WIFI_SLEEP_POLICY,
+                Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+        System.out.println("---> 修改后的Wifi休眠策略值 WIFI_SLEEP_POLICY="+wifiSleepPolicy);
     }
 
     /**

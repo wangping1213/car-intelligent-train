@@ -18,19 +18,24 @@ public class SetPointUdpReceiver extends BaseUdpReceiver {
 
     @Override
     public JSONObject handle(String type, String result) {
-        UdpResult udpResult = getApplication().getMapData("udpResult", UdpResult.class);
-        if (null == udpResult) {
-            udpResult = new UdpResult(CMD_TYPE);
-            getApplication().getMap().put("udpResult", udpResult);
-        }
+//        UdpResult udpResult = getApplication().getMapData("udpResult", UdpResult.class);
+//        if (null == udpResult) {
+//            udpResult = new UdpResult(CMD_TYPE);
+//            getApplication().getMap().put("udpResult", udpResult);
+//        }
         JSONObject retObj = null;
         try {
-            retObj = new JSONObject(result);
+            retObj = new JSONObject("{'flag':'1'}");
         } catch (JSONException e) {
-            Log.w(TAG, "setPoint cmd error_1!");
+            Log.d(TAG, "setPoint json translate error!");
         }
-        udpResult.setData(retObj);
-
+//        try {
+//            retObj = new JSONObject(result);
+//        } catch (JSONException e) {
+//            Log.w(TAG, "setPoint cmd error_1!");
+//        }
+//        udpResult.setData(retObj);
+        getApplication().getMap().put("setPoint_retObj", retObj);
         return retObj;
     }
 }
