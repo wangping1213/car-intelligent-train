@@ -228,6 +228,7 @@ public class Page5Activity extends BaseActivity
                     return;
                 } else {
                     try {
+//                        vbsList.add("{\"message\":\"search\",\"result\":\"ok\",\"data\":{\"type\":\"JG-TD-Type-I\",\"version\":\"1.0\",\"SN\":\"JG-TD-I-OTHER-OTHER-0002\",\"model\":\"OTHER\",\"name\":\"别克威朗车身电气系统\",\"state\":\"unconnected\"}}");
                         ArrayList<CarSystem> carSystemList = getSystemList(vbsList);
                         data.clear();
                         data.addAll(carSystemList);

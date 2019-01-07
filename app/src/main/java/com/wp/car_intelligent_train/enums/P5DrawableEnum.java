@@ -16,8 +16,8 @@ public enum P5DrawableEnum {
     P5_ECU(R.drawable.p5_ecu_sytle, R.drawable.p5_ecu_select, "ECU", "发动机系统"),
     P5_BMS(R.drawable.p5_bms_sytle, R.drawable.p5_bms_select, "BMS", "电池管理系统"),
     P5_PEU(R.drawable.p5_peu_sytle, R.drawable.p5_peu_select, "PEU", "电机控制系统"),
-    P5_VCU(R.drawable.p5_vcu_sytle, R.drawable.p5_vcu_select, "VCU", "整车控制系统")
-//    P5_OTHER(R.drawable.p5_other_sytle, R.drawable.p5_other_select, "OTHER", "其他")
+    P5_VCU(R.drawable.p5_vcu_sytle, R.drawable.p5_vcu_select, "VCU", "整车控制系统"),
+    P5_OTHER(R.drawable.p5_other_sytle, R.drawable.p5_other_select, "OTHER", "其他")
     ;
 
     /**

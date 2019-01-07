@@ -45,4 +45,18 @@
         />
 
 
+    <TextView
+        android:id="@+id/tv_other_wifi_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_15_dip"
+        android:layout_marginStart="@dimen/dimen_35_dip"
+        android:text="JG-VDB-II-Verano_ECU-0021"
+        android:textColor="@color/color_wifi_name"
+        android:textSize="@dimen/dimen_10_sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
 </android.support.constraint.ConstraintLayout>
