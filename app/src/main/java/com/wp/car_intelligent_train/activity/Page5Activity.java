@@ -59,7 +59,7 @@ public class Page5Activity extends BaseActivity
 
     private static final String TAG = "wangping";
     private static Pattern PATTERN_WIFI = Pattern.compile("^JG-TD-I-[^-]+-([^-]+)-[0-9a-fA-F]+$");
-    private static Pattern PATTERN_SYSTEM = Pattern.compile("^([a-zA-Z]+)\\d+$");
+    private static Pattern PATTERN_SYSTEM = Pattern.compile("^([a-zA-Z]+)\\d*$");
     private RecyclerView recycler_view_system;
     private ImageView iv_no_system;
     private ImageView iv_left_line;
