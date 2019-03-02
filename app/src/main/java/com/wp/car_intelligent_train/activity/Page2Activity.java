@@ -498,7 +498,9 @@ public class Page2Activity extends BaseActivity
                     mWifiManager.startScan();
                     Log.d("wangping", String.format("jumpInto:%s", TimeUtil.getNowStrTime()));
                 }
-                scanResultFlag = true;try {
+                scanResultFlag = true;
+
+                try {
                     Thread.sleep(2000L);
                 } catch (Exception e) {
                 }
