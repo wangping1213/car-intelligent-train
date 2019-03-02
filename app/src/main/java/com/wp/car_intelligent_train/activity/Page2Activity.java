@@ -485,29 +485,38 @@ public class Page2Activity extends BaseActivity
     }
 
     public void refresh(View view) throws InterruptedException {
-        LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // 未打开位置开关，可能导致定位失败或定位不准，提示用户或做相应处理
-            Log.d(TAG, String.format("location is not opened!"));
-            //弹出提示，未打开位置开关
-            Intent intent = new Intent(this, TipConnFailedActivity.class);
-            ArrayList<String> tipList = new ArrayList<String>();
-            tipList.add("扫描WIFI列表失败");
-            tipList.add("请打开位置（GPS）开关");
-            intent.putStringArrayListExtra("tipList", tipList);
-            startActivity(intent);
-            return;
-        }
-        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiUtil wifiUtil = WifiUtil.newInstance(mWifiManager);
-        if (!mWifiManager.isWifiEnabled()) {
-            wifiUtil.openWifi();
-        } else {
-            mWifiManager.startScan();
-            Log.d("wangping", String.format("jumpInto:%s", TimeUtil.getNowStrTime()));
-        }
-        scanResultFlag = true;
+                mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiUtil wifiUtil = WifiUtil.newInstance(mWifiManager);
+                if (!mWifiManager.isWifiEnabled()) {
+                    wifiUtil.openWifi();
+                } else {
+                    mWifiManager.startScan();
+                    Log.d("wangping", String.format("jumpInto:%s", TimeUtil.getNowStrTime()));
+                }
+                scanResultFlag = true;try {
+                    Thread.sleep(2000L);
+                } catch (Exception e) {
+                }
+                if(!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && scanResultFlag){
+                    // 未打开位置开关，可能导致定位失败或定位不准，提示用户或做相应处理
+                    Log.d(TAG, String.format("location is not opened!"));
+                    //弹出提示，未打开位置开关
+                    Intent intent = new Intent(Page2Activity.this, TipConnFailedActivity.class);
+                    ArrayList<String> tipList = new ArrayList<String>();
+                    tipList.add("扫描WIFI列表失败");
+                    tipList.add("请打开位置（GPS）开关");
+                    intent.putStringArrayListExtra("tipList", tipList);
+                    startActivity(intent);
+                    return;
+                }
+            }
+        }).start();
+
     }
 
     @Override
